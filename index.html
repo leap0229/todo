@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>ToDoリスト</title>
+</head>
+<body>
+  <h1>ToDoリスト</h1>
+
+  <input type="radio" name="status" checked="checked">すべて
+  <input type="radio" name="status" value="0">作業中
+  <input type="radio" name="status" value="1">完了
+
+  <table id="todos">
+        <tr>
+          <th>ID</th>
+          <th>コメント</th>
+          <th>状態</th>
+          <th></th>
+        </tr>
+  </table>
+
+  <h2>新規タスクの追加</h2>
+  <input type="text" id="comment"/>
+  <button id="addTodo">
+      追加
+  </button>
+
+  <script src="todo.js"></script>
+</body>
+</html>
