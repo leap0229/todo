@@ -33,17 +33,19 @@ const todos = [];
         const todosTable = document.getElementById('todos');
         const newRow = todosTable.insertRow();
 
-        displayTodo(newTodo, newRow);
+        displayTodo(newTodo, newRow, todos.length - 1);
         commentElement.value = '';
     }
 
     /**
      * paramのtodoを、画面上に描画する
      * @param {Todo} todo 
+     * @param {HTMLElement} rowElement 
+     * @param {Int} todoIdx 
      */
-    function displayTodo(todo, rowElement) {        
+    function displayTodo(todo, rowElement, todoIdx) {  
         const idCell = rowElement.insertCell();
-        idCell.textContent = todos.length - 1;
+        idCell.textContent = todoIdx;
 
         const commentCell = rowElement.insertCell();
         commentCell.textContent = todo.comment;
@@ -56,6 +58,41 @@ const todos = [];
         const deleteCell = rowElement.insertCell();
         const deleteButton = document.createElement('button');
         deleteButton.textContent = '削除';
+        deleteButton.setAttribute('id', todoIdx);
+        deleteButton.addEventListener('click', deleteTodo);
         deleteCell.appendChild(deleteButton);
+    }
+
+    /**
+     * 削除ボタンが押下されたTodoを削除する
+     * @param {MouseEvent} event 
+     */
+    function deleteTodo(event) {
+        const todoIdx = parseInt(event.target.id);
+
+        todos.splice(todoIdx, 1);
+        
+        const todosTable = document.getElementById('todos');
+        // 削除対象のID以降の行を、画面から削除する
+        deleteTable(todosTable, todoIdx);
+
+        // 削除対象のID以降のTodoを再描画する
+        const redrawnTodos = todos.slice(todoIdx)
+        redrawnTodos.map((todo, index) => {
+            const newRow = todosTable.insertRow();
+            displayTodo(todo, newRow, todoIdx + index);
+        });
+    }
+
+    /**
+     * tableElementのうち、startIdx以降の行を削除する
+     * @param {HTMLElement} tableElement 
+     * @param {Int} startIdx 
+     */
+    function deleteTable(tableElement, startIdx = 0) {
+        const targetTableIdx = startIdx + 1;
+        while(tableElement.rows[targetTableIdx]) {
+            tableElement.deleteRow(targetTableIdx);
+        }
     }
 })();
