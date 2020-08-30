@@ -7,7 +7,7 @@ class Todo {
     statusText() {
         const statusToText = {
             working: '作業中',
-            done:   '完了'
+            done   : '完了'
         }
 
         return statusToText[this.status];
@@ -27,7 +27,12 @@ const todos = [];
      */
     function addTodo() {
         const commentElement = document.getElementById('comment');
-        const newTodo = new Todo(commentElement.value);
+        const comment = commentElement.value;
+        if (comment == '') {
+            return;
+        }
+
+        const newTodo = new Todo(comment);
         todos.push(newTodo);
 
         const todosTable = document.getElementById('todos');
