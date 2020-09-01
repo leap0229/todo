@@ -25,7 +25,7 @@ const todos = [];
     /**
      * todoを追加する
      */
-    function addTodo() {
+    const addTodo = () => {
         const commentElement = document.getElementById('comment');
         const comment = commentElement.value;
         if (comment == '') {
@@ -48,7 +48,7 @@ const todos = [];
      * @param {HTMLElement} rowElement 
      * @param {Int} todoIdx 
      */
-    function displayTodo(todo, rowElement, todoIdx) {  
+    const displayTodo = (todo, rowElement, todoIdx) => {  
         const idCell = rowElement.insertCell();
         idCell.textContent = todoIdx;
 
@@ -72,7 +72,7 @@ const todos = [];
      * 削除ボタンが押下されたTodoを削除する
      * @param {MouseEvent} event 
      */
-    function deleteTodo(event) {
+    const deleteTodo = (event) => {
         const todoIdx = parseInt(event.target.id);
 
         todos.splice(todoIdx, 1);
@@ -94,9 +94,9 @@ const todos = [];
      * @param {HTMLElement} tableElement 
      * @param {Int} startIdx 
      */
-    function deleteTable(tableElement, startIdx = 0) {
+    const deleteTable = (tableElement, startIdx = 0) => {
         const targetTableIdx = startIdx + 1;
-        while(tableElement.rows[targetTableIdx]) {
+        while (tableElement.rows[targetTableIdx]) {
             tableElement.deleteRow(targetTableIdx);
         }
     }
