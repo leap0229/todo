@@ -1,3 +1,4 @@
+
 class Todo {
     constructor(comment) {
         this.comment = comment;
@@ -11,6 +12,18 @@ class Todo {
         }
 
         return statusToText[this.status];
+    }
+
+    /**
+     * Todoのステータスを反転させる
+     * working => done or done => working
+     */
+    toggleStatus() {
+        if (this.status === 'working') {
+            this.status = 'done';
+        } else {
+            this.status = 'working';
+        }
     }
 }
 
@@ -28,15 +41,12 @@ const addTodo = () => {
         return;
     }
 
-    console.log('comment:', comment);
-
     const newTodo = new Todo(comment);
     todos.push(newTodo);
 
     const todosTable = document.getElementById('todos');
-    const newRow = todosTable.insertRow();
 
-    displayTodo(newTodo, newRow, todos.length - 1);
+    displayTodo(newTodo, todosTable, todos.length - 1);
     commentElement.value = '';
 };
 
@@ -46,19 +56,23 @@ const addTodo = () => {
  * @param {HTMLElement} rowElement 
  * @param {Int} todoIdx 
  */
-const displayTodo = (todo, rowElement, todoIdx) => {
-    const idCell = rowElement.insertCell();
+const displayTodo = (todo, todosTable, todoIdx) => {
+    const newRow = todosTable.insertRow(todoIdx);
+
+    const idCell = newRow.insertCell();
     idCell.textContent = todoIdx;
 
-    const commentCell = rowElement.insertCell();
+    const commentCell = newRow.insertCell();
     commentCell.textContent = todo.comment;
 
-    const statusCell = rowElement.insertCell();
+    const statusCell = newRow.insertCell();
     const statusButton = document.createElement('button');
     statusButton.textContent = todo.statusText();
+    statusButton.setAttribute('id', todoIdx);
+    statusButton.addEventListener('click', updateStatus);
     statusCell.appendChild(statusButton);
 
-    const deleteCell = rowElement.insertCell();
+    const deleteCell = newRow.insertCell();
     const deleteButton = document.createElement('button');
     deleteButton.textContent = '削除';
     deleteButton.setAttribute('id', todoIdx);
@@ -82,8 +96,7 @@ const deleteTodo = (event) => {
     // 削除対象のID以降のTodoを再描画する
     const redrawnTodos = todos.slice(todoIdx)
     redrawnTodos.map((todo, index) => {
-        const newRow = todosTable.insertRow();
-        displayTodo(todo, newRow, todoIdx + index);
+        displayTodo(todo, todosTable, todoIdx + index);
     });
 };
 
@@ -93,11 +106,25 @@ const deleteTodo = (event) => {
  * @param {Int} startIdx 
  */
 const deleteTable = (tableElement, startIdx = 0) => {
-    const targetTableIdx = startIdx + 1;
-    while (tableElement.rows[targetTableIdx]) {
-        tableElement.deleteRow(targetTableIdx);
+    while (tableElement.rows[startIdx]) {
+        tableElement.deleteRow(startIdx);
     }
 };
+
+/**
+ * 押下されたTodoの状態を変更する
+ * @param {HTMLElement} event 
+ */
+const updateStatus = (event) => {
+    const todoIdx = parseInt(event.target.id);
+
+    const targetTodo = todos[todoIdx];
+    targetTodo.toggleStatus();
+
+    const todosTable = document.getElementById('todos');
+    todosTable.deleteRow(todoIdx);
+    displayTodo(targetTodo, todosTable, todoIdx);
+}
 
 (() => {
     const todoAddButton = document.getElementById('addTodo');
