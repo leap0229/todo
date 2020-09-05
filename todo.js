@@ -30,7 +30,7 @@ class Todo {
 
 
 // todoの一覧
-let todos = [];
+const todos = [];
 
 /**
  * todoを追加する
@@ -128,17 +128,17 @@ const deleteTodo = (event) => {
     // 削除対象のID以降の行を、画面から削除する
     deleteTable(todosTable, todoIdx);
 
-    // todoリストから選択されたtodoを削除、idを再割り当てする
+    // todoリストから選択されたtodoを削除
     const todoId = parseInt(event.target.id);
-    todos = todos.filter(todo => todoId !== todo.id)
-                 .map(todo => {
-                    if (todoId < todo.id) {
-                        todo.id--;
-                        displayTodo(todo, todosTable);
-                    }
-                        
-                    return todo;
-                 });
+    todos.splice(todoId, 1);
+
+    // idを再割り当てする
+    todos.forEach((todo, index) => {
+        if (todoId < todo.id) {
+            todo.id = index;
+            displayTodo(todo, todosTable);
+        }
+    });
 };
 
 /**
